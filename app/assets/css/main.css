@@ -1,0 +1,70 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Stone Brand Colors */
+@theme {
+  --color-stone-green: #00A868;
+  --color-card-cdb: #3B82F6;
+  --color-card-compromissada: #8B5CF6;
+  --color-card-app-auto: #F59E0B;
+  --color-card-taxa-inteligente: #00A868;
+}
+
+/* Custom animations and transitions */
+.page-enter-active,
+.page-leave-active {
+  transition: all 0.2s;
+}
+
+.page-enter-from,
+.page-leave-to {
+  opacity: 0;
+  transform: translateY(0.4rem);
+}
+
+/* Stone Green utility classes */
+.bg-stone-green {
+  background-color: var(--color-stone-green);
+}
+
+.text-stone-green {
+  color: var(--color-stone-green);
+}
+
+.border-stone-green {
+  border-color: var(--color-stone-green);
+}
+
+.ring-stone-green {
+  --tw-ring-color: var(--color-stone-green);
+}
+
+.from-stone-green {
+  --tw-gradient-from: var(--color-stone-green);
+}
+
+.to-stone-green {
+  --tw-gradient-to: var(--color-stone-green);
+}
+
+/* Focus styles using Stone green */
+.focus\:border-stone-green:focus {
+  border-color: var(--color-stone-green);
+}
+
+.dark .dark\:focus\:border-stone-green:focus {
+  border-color: var(--color-stone-green);
+}
+
+/* Number input - hide spinners */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
