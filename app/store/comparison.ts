@@ -13,6 +13,7 @@ export const useComparisonStore = defineStore('comparison', () => {
   const compromissadaPercent = ref(DEFAULT_VALUES.compromissadaPercent)
   const taxaInteligenteDiscount = ref(DEFAULT_VALUES.taxaInteligenteDiscount)
   const isLoadingCdi = ref(DEFAULT_VALUES.isLoadingCdi)
+  const showCompromissada = ref(false) // Toggle para mostrar/esconder Compromissada
 
   // Computed - Results
   const results = computed<ProductResult[]>(() => {
@@ -25,7 +26,12 @@ export const useComparisonStore = defineStore('comparison', () => {
       taxaInteligenteDiscount: taxaInteligenteDiscount.value,
     })
 
-    return comparisonResults.map(result => ({
+    // Filtra Compromissada se não estiver ativada
+    const filtered = showCompromissada.value
+      ? comparisonResults
+      : comparisonResults.filter(r => r.type !== 'compromissada')
+
+    return filtered.map(result => ({
       ...result,
       displayName: PRODUCT_DISPLAY_NAMES[result.type],
       color: PRODUCT_COLORS[result.type],
@@ -71,6 +77,14 @@ export const useComparisonStore = defineStore('comparison', () => {
     }
   }
 
+  function setShowCompromissada(value: boolean) {
+    showCompromissada.value = value
+  }
+
+  function toggleCompromissada() {
+    showCompromissada.value = !showCompromissada.value
+  }
+
   function resetToDefaults() {
     billing.value = DEFAULT_VALUES.billing
     period.value = DEFAULT_VALUES.period
@@ -78,6 +92,7 @@ export const useComparisonStore = defineStore('comparison', () => {
     cdbPercent.value = DEFAULT_VALUES.cdbPercent
     compromissadaPercent.value = DEFAULT_VALUES.compromissadaPercent
     taxaInteligenteDiscount.value = DEFAULT_VALUES.taxaInteligenteDiscount
+    showCompromissada.value = false
   }
 
   return {
@@ -89,6 +104,7 @@ export const useComparisonStore = defineStore('comparison', () => {
     compromissadaPercent,
     taxaInteligenteDiscount,
     isLoadingCdi,
+    showCompromissada,
 
     // Computed
     results,
@@ -101,6 +117,8 @@ export const useComparisonStore = defineStore('comparison', () => {
     setCdbPercent,
     setCompromissadaPercent,
     setTaxaInteligenteDiscount,
+    setShowCompromissada,
+    toggleCompromissada,
     resetToDefaults,
   }
 })

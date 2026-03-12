@@ -1,28 +1,53 @@
 <template>
   <div
-    class="relative bg-white dark:bg-gray-800 rounded-2xl shadow-xl dark:shadow-white/5 overflow-hidden border-2 border-gray-100 dark:border-gray-700 transition-all duration-300 card-hover"
+    :class="[
+      'relative bg-white dark:bg-gray-800 rounded-2xl shadow-xl dark:shadow-white/5 overflow-hidden transition-all duration-300 card-hover',
+      featured
+        ? 'border-4 border-emerald-500 ring-4 ring-emerald-500/20'
+        : 'border-2 border-gray-100 dark:border-gray-700'
+    ]"
   >
+    <!-- Featured badge -->
+    <div
+      v-if="featured"
+      class="absolute top-4 right-4 z-10"
+    >
+      <div class="bg-white/20 backdrop-blur-sm rounded-full px-3 py-1 flex items-center gap-1">
+        <ion-icon
+          name="star"
+          class="text-yellow-300 text-sm"
+        />
+        <span class="text-white text-xs font-bold uppercase tracking-wide">Recomendado</span>
+      </div>
+    </div>
+
     <!-- Header with gradient background -->
     <div
-      class="relative px-5 py-4"
-      :class="headerClasses"
+      :class="[
+        'relative',
+        headerClasses,
+        featured ? 'px-6 py-6' : 'px-5 py-4'
+      ]"
     >
       <!-- Product icon and name -->
-      <div class="flex items-center gap-3">
+      <div :class="featured ? 'flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left' : 'flex items-center gap-3'">
         <div
-          class="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg"
-          :class="iconBgClass"
+          :class="[
+            'rounded-xl flex items-center justify-center shadow-lg',
+            iconBgClass,
+            featured ? 'w-14 h-14' : 'w-10 h-10'
+          ]"
         >
           <ion-icon
             :name="productIcon"
-            class="text-xl text-white"
+            :class="['text-white', featured ? 'text-2xl' : 'text-xl']"
           />
         </div>
         <div>
-          <h3 class="text-base font-bold text-white">
+          <h3 :class="['font-bold text-white', featured ? 'text-xl' : 'text-base']">
             {{ displayName }}
           </h3>
-          <p class="text-xs text-white/70">
+          <p :class="['text-white/70', featured ? 'text-sm' : 'text-xs']">
             {{ productSubtitle }}
           </p>
         </div>
@@ -30,13 +55,13 @@
     </div>
 
     <!-- Main content -->
-    <div class="relative p-5">
+    <div :class="['relative', featured ? 'p-6' : 'p-5']">
       <!-- Main value display -->
-      <div class="text-center mb-4">
-        <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">
+      <div :class="['text-center', featured ? 'mb-6' : 'mb-4']">
+        <p :class="['font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1', featured ? 'text-sm' : 'text-xs']">
           {{ valueLabel }}
         </p>
-        <p class="text-2xl font-bold tracking-tight text-gray-800 dark:text-gray-100">
+        <p :class="['font-bold tracking-tight text-gray-800 dark:text-gray-100', featured ? 'text-4xl' : 'text-2xl']">
           {{ formattedNetAmount }}
         </p>
       </div>
@@ -94,26 +119,32 @@
       <!-- Details for Taxa Inteligente -->
       <div
         v-if="isTaxaInteligente"
-        class="space-y-3"
+        :class="featured ? 'space-y-4' : 'space-y-3'"
       >
-        <div class="flex items-center justify-between py-1.5 border-b border-gray-100 dark:border-gray-700 text-sm">
+        <div :class="['flex items-center justify-between py-1.5 border-b border-gray-100 dark:border-gray-700', featured ? 'text-base' : 'text-sm']">
           <div class="flex items-center gap-2">
-            <div class="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+            <div :class="['rounded-full bg-emerald-500', featured ? 'w-2 h-2' : 'w-1.5 h-1.5']" />
             <span class="text-gray-600 dark:text-gray-400">Por dia</span>
           </div>
-          <span class="font-semibold text-emerald-600 dark:text-emerald-400">
+          <span :class="['font-semibold text-emerald-600 dark:text-emerald-400', featured ? 'text-lg' : '']">
             {{ formattedDailyDiscount }}
           </span>
         </div>
 
-        <div class="bg-emerald-50 dark:bg-emerald-900/20 rounded-lg p-3 text-center">
-          <div class="flex items-center justify-center gap-1.5 text-emerald-700 dark:text-emerald-300">
+        <div :class="['bg-emerald-50 dark:bg-emerald-900/20 rounded-lg text-center', featured ? 'p-4' : 'p-3']">
+          <div :class="['flex items-center justify-center gap-2 text-emerald-700 dark:text-emerald-300', featured ? 'flex-wrap' : '']">
             <ion-icon
               name="checkmark-circle"
-              class="text-base"
+              :class="featured ? 'text-xl' : 'text-base'"
             />
-            <span class="text-xs font-medium">Sem IOF e sem IR</span>
+            <span :class="['font-medium', featured ? 'text-sm' : 'text-xs']">Sem IOF e sem IR</span>
           </div>
+          <p
+            v-if="featured"
+            class="mt-2 text-xs text-emerald-600 dark:text-emerald-400"
+          >
+            Desconto aplicado diretamente na sua taxa de maquininha
+          </p>
         </div>
       </div>
     </div>
@@ -125,9 +156,12 @@ import { computed } from 'vue'
 import type { ProductColor, ProductResult } from '~/types/comparison'
 import type { TaxaInteligenteResult } from '~/src/taxaInteligente'
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   product: ProductResult
-}>()
+  featured?: boolean
+}>(), {
+  featured: false,
+})
 
 const formatCurrency = (value: number) => {
   return value.toLocaleString('pt-BR', {

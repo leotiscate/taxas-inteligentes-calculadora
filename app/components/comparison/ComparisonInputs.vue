@@ -24,8 +24,32 @@
       <PeriodSelect />
       <CdiRateInput />
       <CdbPercentInput />
-      <CompromissadaPercentInput />
+      <CompromissadaPercentInput v-if="store.showCompromissada" />
       <DiscountInput />
+    </div>
+
+    <!-- Toggle Compromissada -->
+    <div class="mt-4 flex items-center gap-3">
+      <button
+        type="button"
+        :class="[
+          'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2',
+          store.showCompromissada ? 'bg-emerald-500' : 'bg-gray-200 dark:bg-gray-700'
+        ]"
+        role="switch"
+        :aria-checked="store.showCompromissada"
+        @click="store.toggleCompromissada()"
+      >
+        <span
+          :class="[
+            'pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
+            store.showCompromissada ? 'translate-x-5' : 'translate-x-0'
+          ]"
+        />
+      </button>
+      <span class="text-sm text-gray-600 dark:text-gray-300">
+        Mostrar Compromissada
+      </span>
     </div>
 
     <!-- Quick info -->
@@ -44,10 +68,13 @@
 </template>
 
 <script setup lang='ts'>
+import { useComparisonStore } from '~/store/comparison'
 import BillingInput from '~/components/inputs/BillingInput.vue'
 import PeriodSelect from '~/components/inputs/PeriodSelect.vue'
 import CdiRateInput from '~/components/inputs/CdiRateInput.vue'
 import CdbPercentInput from '~/components/inputs/CdbPercentInput.vue'
 import CompromissadaPercentInput from '~/components/inputs/CompromissadaPercentInput.vue'
 import DiscountInput from '~/components/inputs/DiscountInput.vue'
+
+const store = useComparisonStore()
 </script>

@@ -18,10 +18,22 @@
       </div>
     </div>
 
-    <!-- Cards grid - 4 colunas lado a lado -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+    <!-- Taxa Inteligente destacada primeiro -->
+    <div
+      v-if="taxaInteligenteResult"
+      class="mb-6"
+    >
       <ProductCard
-        v-for="(product, index) in sortedResults"
+        :product="taxaInteligenteResult"
+        :featured="true"
+        class="animate-fade-in-up"
+      />
+    </div>
+
+    <!-- Demais cards em grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+      <ProductCard
+        v-for="(product, index) in otherResults"
         :key="product.type"
         :product="product"
         class="animate-fade-in-up opacity-0"
@@ -38,5 +50,11 @@ import ProductCard from '~/components/cards/ProductCard.vue'
 
 const store = useComparisonStore()
 
-const sortedResults = computed(() => store.results)
+const taxaInteligenteResult = computed(() =>
+  store.results.find(r => r.type === 'taxaInteligente'),
+)
+
+const otherResults = computed(() =>
+  store.results.filter(r => r.type !== 'taxaInteligente'),
+)
 </script>
