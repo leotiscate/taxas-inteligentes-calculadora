@@ -9,24 +9,6 @@
     <!-- Main content -->
     <div class="relative py-8 px-4 sm:px-6 lg:px-8">
       <div class="max-w-6xl mx-auto">
-        <!-- Navigation -->
-        <div class="flex justify-center mb-8">
-          <nav class="flex gap-2 bg-white dark:bg-gray-800 p-1 rounded-xl shadow-lg">
-            <NuxtLink
-              to="/"
-              class="px-4 py-2 rounded-lg text-sm font-medium bg-emerald-500 text-white"
-            >
-              Comparador
-            </NuxtLink>
-            <NuxtLink
-              to="/fluxo-de-caixa"
-              class="px-4 py-2 rounded-lg text-sm font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-            >
-              Fluxo de Caixa
-            </NuxtLink>
-          </nav>
-        </div>
-
         <ComparisonHeader />
         <ComparisonInputs />
         <ComparisonGrid />
