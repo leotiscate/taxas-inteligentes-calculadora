@@ -4,6 +4,8 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineNuxtConfig({
 
+  css: ['~/assets/css/main.css'],
+
   modules: [
     '@pinia/nuxt',
     '@nuxt/test-utils/module',
