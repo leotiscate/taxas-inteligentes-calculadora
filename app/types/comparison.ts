@@ -42,7 +42,7 @@ export const PRODUCT_COLORS: Record<ProductType, ProductColor> = {
 export const PRODUCT_DISPLAY_NAMES: Record<ProductType, string> = {
   cdb: 'CDB',
   compromissada: 'Compromissada',
-  aplicacaoAutomatica: 'Aplicação Automática',
+  aplicacaoAutomatica: 'App. Automática',
   taxaInteligente: 'Taxa Inteligente',
 }
 

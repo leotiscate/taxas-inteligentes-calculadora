@@ -29,11 +29,11 @@
             :class="['text-white', featured ? 'text-2xl' : 'text-xl']"
           />
         </div>
-        <div>
-          <h3 :class="['font-bold text-white', featured ? 'text-xl' : 'text-base']">
+        <div class="min-w-0">
+          <h3 :class="['font-bold text-white whitespace-nowrap', featured ? 'text-xl' : 'text-sm']">
             {{ displayName }}
           </h3>
-          <p :class="['text-white/70', featured ? 'text-sm' : 'text-xs']">
+          <p :class="['text-white/70 whitespace-nowrap', featured ? 'text-sm' : 'text-xs']">
             {{ productSubtitle }}
           </p>
         </div>
