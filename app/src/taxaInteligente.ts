@@ -6,14 +6,14 @@ export interface TaxaInteligenteResult {
 /**
  * Calcula o desconto da Taxa Inteligente Stone
  *
- * Fórmula: Desconto = Faturamento × %desconto × (dias/30)
+ * Fórmula: Desconto = Faturamento × %desconto
  *
  * Exemplo:
- * R$1.000.000 × 0.15% × (7/30) = R$350
+ * R$1.000.000 × 0.15% = R$1.500
  *
  * @param billing - Faturamento do cliente em R$
  * @param discountPercent - Percentual de desconto (ex: 0.15 = 0.15%)
- * @param days - Prazo em dias
+ * @param days - Prazo em dias (usado para calcular desconto diário)
  * @returns Desconto total e desconto diário
  */
 export function getTaxaInteligenteResult(
@@ -21,12 +21,14 @@ export function getTaxaInteligenteResult(
   discountPercent: number,
   days: number,
 ): TaxaInteligenteResult {
-  // Desconto = Faturamento × (%desconto/100) × (dias/30)
+  // Desconto = Faturamento × (%desconto/100)
   const discountRate = discountPercent / 100
-  const discountAmount = Number.parseFloat((billing * discountRate * (days / 30)).toFixed(2))
+  const discountAmount = Number.parseFloat((billing * discountRate).toFixed(2))
 
-  // Desconto diário para referência
-  const dailyDiscount = Number.parseFloat((billing * discountRate / 30).toFixed(2))
+  // Desconto diário para referência (desconto total / dias)
+  const dailyDiscount = days > 0
+    ? Number.parseFloat((discountAmount / days).toFixed(2))
+    : 0
 
   return { discountAmount, dailyDiscount }
 }
