@@ -70,24 +70,32 @@
             <div class="flex-1 flex items-end justify-center gap-0.5 sm:gap-1 pb-2">
               <!-- Entries bar -->
               <div
-                class="flex-1 max-w-8 sm:max-w-12 rounded-t-md sm:rounded-t-lg transition-all duration-300 cursor-pointer relative overflow-hidden shadow-sm hover:shadow-md"
+                class="flex-1 max-w-10 sm:max-w-14 rounded-t-md sm:rounded-t-lg transition-all duration-300 cursor-pointer relative overflow-hidden shadow-sm hover:shadow-md flex flex-col justify-start items-center pt-1"
                 :class="hasRealImpact(week)
                   ? 'bg-gradient-to-t from-amber-500 to-amber-300 hover:from-amber-600 hover:to-amber-400'
                   : 'bg-gradient-to-t from-emerald-600 to-emerald-400 hover:from-emerald-700 hover:to-emerald-500'"
-                :style="{ height: `${Math.max((week.totalEntries / maxValue) * 100, 2)}%` }"
+                :style="{ height: `${Math.max((week.totalEntries / maxValue) * 100, 8)}%` }"
                 :title="getWeekTooltip(week)"
               >
+                <!-- Valor da barra -->
+                <span class="text-[8px] sm:text-[10px] font-bold text-white drop-shadow-sm whitespace-nowrap">
+                  {{ formatCompact(week.totalEntries) }}
+                </span>
                 <!-- Brilho interno -->
-                <div class="absolute inset-0 bg-gradient-to-r from-white/20 via-transparent to-transparent" />
+                <div class="absolute inset-0 bg-gradient-to-r from-white/20 via-transparent to-transparent pointer-events-none" />
               </div>
               <!-- Expenses bar -->
               <div
-                class="flex-1 max-w-8 sm:max-w-12 rounded-t-md sm:rounded-t-lg transition-all duration-300 cursor-pointer relative overflow-hidden shadow-sm hover:shadow-md bg-gradient-to-t from-rose-600 to-rose-400 hover:from-rose-700 hover:to-rose-500"
-                :style="{ height: `${Math.max((week.expenses / maxValue) * 100, 2)}%` }"
+                class="flex-1 max-w-10 sm:max-w-14 rounded-t-md sm:rounded-t-lg transition-all duration-300 cursor-pointer relative overflow-hidden shadow-sm hover:shadow-md bg-gradient-to-t from-rose-600 to-rose-400 hover:from-rose-700 hover:to-rose-500 flex flex-col justify-start items-center pt-1"
+                :style="{ height: `${Math.max((week.expenses / maxValue) * 100, 8)}%` }"
                 :title="`Despesas: ${formatCurrency(week.expenses)}`"
               >
+                <!-- Valor da barra -->
+                <span class="text-[8px] sm:text-[10px] font-bold text-white drop-shadow-sm whitespace-nowrap">
+                  {{ formatCompact(week.expenses) }}
+                </span>
                 <!-- Brilho interno -->
-                <div class="absolute inset-0 bg-gradient-to-r from-white/20 via-transparent to-transparent" />
+                <div class="absolute inset-0 bg-gradient-to-r from-white/20 via-transparent to-transparent pointer-events-none" />
               </div>
             </div>
 
