@@ -19,25 +19,34 @@
     </div>
 
     <!-- Legend -->
-    <div class="flex items-center justify-center gap-6 mb-6">
+    <div class="flex items-center justify-center gap-4 sm:gap-6 mb-6 flex-wrap">
       <div class="flex items-center gap-2">
-        <div class="w-4 h-4 rounded bg-green-500" />
+        <div class="w-4 h-4 rounded bg-gradient-to-t from-emerald-600 to-emerald-400" />
         <span class="text-sm text-gray-600 dark:text-gray-400">Sem impacto</span>
       </div>
       <div class="flex items-center gap-2">
-        <div class="w-4 h-4 rounded bg-orange-400" />
-        <span class="text-sm text-gray-600 dark:text-gray-400">Com impacto do delay</span>
+        <div class="w-4 h-4 rounded bg-gradient-to-t from-amber-500 to-amber-300" />
+        <span class="text-sm text-gray-600 dark:text-gray-400">Com impacto</span>
       </div>
       <div class="flex items-center gap-2">
-        <div class="w-4 h-4 rounded bg-red-500" />
+        <div class="w-4 h-4 rounded bg-gradient-to-t from-rose-600 to-rose-400" />
         <span class="text-sm text-gray-600 dark:text-gray-400">Despesas</span>
       </div>
     </div>
 
-    <!-- Chart -->
-    <div class="relative">
+    <!-- Chart Container -->
+    <div class="relative bg-gray-50 dark:bg-gray-900/50 rounded-xl p-4 sm:p-6">
+      <!-- Grid lines de fundo -->
+      <div class="absolute inset-4 sm:inset-6 flex flex-col justify-between pointer-events-none">
+        <div class="border-b border-dashed border-gray-200 dark:border-gray-700" />
+        <div class="border-b border-dashed border-gray-200 dark:border-gray-700" />
+        <div class="border-b border-dashed border-gray-200 dark:border-gray-700" />
+        <div class="border-b border-dashed border-gray-200 dark:border-gray-700" />
+        <div class="border-b border-gray-300 dark:border-gray-600" />
+      </div>
+
       <!-- Y-axis labels -->
-      <div class="absolute left-0 top-0 bottom-8 w-16 flex flex-col justify-between text-xs text-gray-500 dark:text-gray-400 text-right pr-2">
+      <div class="absolute left-0 top-4 sm:top-6 bottom-16 w-12 sm:w-14 flex flex-col justify-between text-[10px] sm:text-xs text-gray-500 dark:text-gray-400 text-right pr-1 sm:pr-2">
         <span>{{ formatCompact(maxValue) }}</span>
         <span>{{ formatCompact(maxValue * 0.75) }}</span>
         <span>{{ formatCompact(maxValue * 0.5) }}</span>
@@ -45,59 +54,64 @@
         <span>0</span>
       </div>
 
-      <!-- Chart area -->
-      <div class="ml-16 overflow-x-auto">
+      <!-- Chart area - Full width -->
+      <div class="ml-12 sm:ml-14">
         <div
-          class="flex items-end gap-2 min-w-max"
-          style="height: 300px;"
+          class="grid gap-1 sm:gap-2"
+          :style="{ gridTemplateColumns: `repeat(${store.result.weeks.length}, 1fr)` }"
+          style="height: 280px;"
         >
           <div
             v-for="week in store.result.weeks"
             :key="week.weekNumber"
-            class="flex flex-col items-center"
+            class="flex flex-col h-full group"
           >
-            <!-- Bars -->
-            <div class="flex items-end gap-1 h-64">
+            <!-- Bars container -->
+            <div class="flex-1 flex items-end justify-center gap-0.5 sm:gap-1 pb-2">
               <!-- Entries bar -->
               <div
-                class="w-6 sm:w-8 rounded-t transition-all duration-300 cursor-pointer"
-                :class="hasRealImpact(week) ? 'bg-orange-400 hover:bg-orange-500' : 'bg-green-500 hover:bg-green-600'"
-                :style="{ height: `${(week.totalEntries / maxValue) * 100}%` }"
+                class="flex-1 max-w-8 sm:max-w-12 rounded-t-md sm:rounded-t-lg transition-all duration-300 cursor-pointer relative overflow-hidden shadow-sm hover:shadow-md"
+                :class="hasRealImpact(week)
+                  ? 'bg-gradient-to-t from-amber-500 to-amber-300 hover:from-amber-600 hover:to-amber-400'
+                  : 'bg-gradient-to-t from-emerald-600 to-emerald-400 hover:from-emerald-700 hover:to-emerald-500'"
+                :style="{ height: `${Math.max((week.totalEntries / maxValue) * 100, 2)}%` }"
                 :title="getWeekTooltip(week)"
-              />
+              >
+                <!-- Brilho interno -->
+                <div class="absolute inset-0 bg-gradient-to-r from-white/20 via-transparent to-transparent" />
+              </div>
               <!-- Expenses bar -->
               <div
-                class="w-6 sm:w-8 bg-red-500 hover:bg-red-600 rounded-t transition-all duration-300 cursor-pointer"
-                :style="{ height: `${(week.expenses / maxValue) * 100}%` }"
+                class="flex-1 max-w-8 sm:max-w-12 rounded-t-md sm:rounded-t-lg transition-all duration-300 cursor-pointer relative overflow-hidden shadow-sm hover:shadow-md bg-gradient-to-t from-rose-600 to-rose-400 hover:from-rose-700 hover:to-rose-500"
+                :style="{ height: `${Math.max((week.expenses / maxValue) * 100, 2)}%` }"
                 :title="`Despesas: ${formatCurrency(week.expenses)}`"
-              />
-            </div>
-
-            <!-- Week label -->
-            <div class="mt-2 text-xs text-gray-500 dark:text-gray-400 text-center">
-              <div
-                class="font-medium px-1 py-0.5 rounded"
-                :class="hasRealImpact(week) ? 'bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300' : ''"
               >
-                S{{ week.weekNumber }}
+                <!-- Brilho interno -->
+                <div class="absolute inset-0 bg-gradient-to-r from-white/20 via-transparent to-transparent" />
               </div>
             </div>
 
-            <!-- Balance indicator -->
-            <div
-              :class="[
-                'mt-1 text-xs font-semibold',
-                week.balance >= 0 ? 'text-green-600' : 'text-red-600'
-              ]"
-            >
-              {{ week.balance >= 0 ? '+' : '' }}{{ formatCompact(week.balance) }}
+            <!-- Week label -->
+            <div class="text-center pt-2 border-t border-gray-200 dark:border-gray-700">
+              <div
+                class="text-[10px] sm:text-xs font-semibold px-1 py-0.5 rounded transition-colors"
+                :class="hasRealImpact(week)
+                  ? 'text-amber-700 dark:text-amber-400 bg-amber-100 dark:bg-amber-900/30'
+                  : 'text-gray-600 dark:text-gray-400'"
+              >
+                S{{ week.weekNumber }}
+              </div>
+              <!-- Balance indicator -->
+              <div
+                class="text-[10px] sm:text-xs font-bold mt-0.5"
+                :class="week.balance >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'"
+              >
+                {{ week.balance >= 0 ? '+' : '' }}{{ formatCompact(week.balance) }}
+              </div>
             </div>
           </div>
         </div>
       </div>
-
-      <!-- Baseline -->
-      <div class="ml-16 h-px bg-gray-300 dark:bg-gray-600" />
     </div>
 
     <!-- Insight box -->
