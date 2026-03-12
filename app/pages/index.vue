@@ -12,6 +12,7 @@
         <ComparisonHeader />
         <ComparisonInputs />
         <ComparisonGrid />
+        <ExplanationSection />
 
         <!-- Footer -->
         <footer class="mt-12 text-center text-sm text-gray-500 dark:text-gray-400">
@@ -29,6 +30,7 @@
 import ComparisonHeader from '~/components/comparison/ComparisonHeader.vue'
 import ComparisonInputs from '~/components/comparison/ComparisonInputs.vue'
 import ComparisonGrid from '~/components/comparison/ComparisonGrid.vue'
+import ExplanationSection from '~/components/comparison/ExplanationSection.vue'
 
 useSeoMeta({
   title: 'Comparador de Investimentos',
