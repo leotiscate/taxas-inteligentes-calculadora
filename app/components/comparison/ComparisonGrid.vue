@@ -18,20 +18,17 @@
       </div>
     </div>
 
-    <!-- Taxa Inteligente destacada primeiro -->
-    <div
-      v-if="taxaInteligenteResult"
-      class="mb-6"
-    >
+    <!-- Grid com Taxa Inteligente em destaque (primeira posição, maior) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+      <!-- Taxa Inteligente - ocupa 2 colunas em telas grandes -->
       <ProductCard
+        v-if="taxaInteligenteResult"
         :product="taxaInteligenteResult"
         :featured="true"
-        class="animate-fade-in-up"
+        class="animate-fade-in-up sm:col-span-2 xl:row-span-2"
       />
-    </div>
 
-    <!-- Demais cards em grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+      <!-- Demais produtos -->
       <ProductCard
         v-for="(product, index) in otherResults"
         :key="product.type"
