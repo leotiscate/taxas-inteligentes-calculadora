@@ -51,7 +51,7 @@ export const PERIOD_OPTIONS: PeriodOption[] = [3, 7, 15, 30]
 export const DEFAULT_VALUES: ComparisonState = {
   billing: 1000000,
   period: 7,
-  cdiRate: 13.65,
+  cdiRate: 14.9,
   cdbPercent: 100,
   compromissadaPercent: 100,
   taxaInteligenteDiscount: 0.15,
