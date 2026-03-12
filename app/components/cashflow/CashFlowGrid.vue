@@ -1,130 +1,88 @@
 <template>
   <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl dark:shadow-white/5 p-6 sm:p-8 mb-8 border border-gray-100 dark:border-gray-700">
     <!-- Section title -->
-    <div class="flex items-center justify-between mb-6">
+    <div class="flex items-center justify-between mb-4">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg">
+        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shadow">
           <ion-icon
             name="calendar"
-            class="text-white text-xl"
+            class="text-white text-lg"
           />
         </div>
         <div>
-          <h2 class="text-lg font-bold text-gray-800 dark:text-white">
-            Projecao Semanal
+          <h2 class="text-base font-bold text-gray-800 dark:text-white">
+            Detalhamento Semanal
           </h2>
-          <p class="text-sm text-gray-500 dark:text-gray-400">
-            12 semanas a partir da ativacao
+          <p class="text-xs text-gray-500 dark:text-gray-400">
+            Clique nas despesas para editar
           </p>
         </div>
       </div>
 
-      <!-- Legenda -->
-      <div class="hidden sm:flex items-center gap-4 text-xs">
+      <!-- Legenda compacta -->
+      <div class="flex items-center gap-3 text-xs">
         <div class="flex items-center gap-1">
-          <div class="w-3 h-3 rounded bg-orange-200 dark:bg-orange-900/50" />
+          <div class="w-2 h-2 rounded-full bg-orange-400" />
           <span class="text-gray-500 dark:text-gray-400">Transicao</span>
         </div>
         <div class="flex items-center gap-1">
-          <div class="w-3 h-3 rounded bg-green-200 dark:bg-green-900/50" />
+          <div class="w-2 h-2 rounded-full bg-green-400" />
           <span class="text-gray-500 dark:text-gray-400">Normal</span>
         </div>
       </div>
     </div>
 
-    <!-- Weeks Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+    <!-- Weeks Grid - Compact -->
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-2">
       <div
         v-for="week in store.result.weeks"
         :key="week.weekNumber"
         :class="[
-          'rounded-xl p-4 border-2 transition-all',
+          'rounded-lg p-2 border transition-all',
           week.isTransitionWeek
             ? 'bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-800'
             : 'bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800'
         ]"
       >
         <!-- Week header -->
-        <div class="flex items-center justify-between mb-3">
+        <div class="flex items-center justify-between mb-2">
           <h3
             :class="[
-              'font-bold',
+              'text-xs font-bold',
               week.isTransitionWeek
                 ? 'text-orange-800 dark:text-orange-300'
                 : 'text-green-800 dark:text-green-300'
             ]"
           >
-            {{ week.label }}
+            S{{ week.weekNumber }}
           </h3>
           <span
             v-if="week.isTransitionWeek"
-            class="text-xs bg-orange-200 dark:bg-orange-800 text-orange-700 dark:text-orange-300 px-2 py-0.5 rounded-full"
-          >
-            Transicao
-          </span>
+            class="w-2 h-2 rounded-full bg-orange-400"
+            title="Transicao"
+          />
         </div>
 
-        <!-- Days grid -->
-        <div class="grid grid-cols-7 gap-1 mb-3">
-          <div
-            v-for="day in week.days"
-            :key="day.date.toISOString()"
-            :class="[
-              'text-center p-1.5 rounded text-xs',
-              day.isWeekend
-                ? 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
-                : day.isReduced
-                  ? 'bg-orange-100 dark:bg-orange-900/40 text-orange-700 dark:text-orange-300'
-                  : 'bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-300'
-            ]"
-          >
-            <div class="font-medium">{{ day.dayOfWeekShort }}</div>
-            <div class="text-[10px] opacity-70">{{ formatDate(day.date) }}</div>
-            <div class="font-semibold mt-0.5">{{ formatCompact(day.amount) }}</div>
-          </div>
-        </div>
-
-        <!-- Week totals -->
-        <div class="space-y-1 text-sm border-t border-gray-200 dark:border-gray-600 pt-3">
+        <!-- Week totals - Compact -->
+        <div class="space-y-0.5 text-xs">
           <div class="flex justify-between">
-            <span class="text-gray-600 dark:text-gray-400">Entradas</span>
-            <span class="font-semibold text-green-600 dark:text-green-400">
-              {{ formatCurrency(week.totalEntries) }}
+            <span class="text-gray-500 dark:text-gray-400">Ent</span>
+            <span class="font-medium text-green-600 dark:text-green-400">
+              {{ formatCompact(week.totalEntries) }}
             </span>
           </div>
           <div class="flex justify-between items-center">
-            <span class="text-gray-600 dark:text-gray-400">Despesas</span>
-            <div class="flex items-center gap-1">
-              <button
-                class="text-gray-400 hover:text-blue-500 transition-colors"
-                title="Editar despesa"
-                @click="startEditExpense(week.weekNumber - 1, week.expenses)"
-              >
-                <ion-icon
-                  name="pencil"
-                  class="text-xs"
-                />
-              </button>
-              <input
-                v-if="editingWeek === week.weekNumber - 1"
-                v-model="editingValue"
-                type="text"
-                class="w-20 px-1 py-0.5 text-right text-xs bg-white dark:bg-gray-700 border border-blue-400 rounded focus:outline-none"
-                @blur="saveExpense(week.weekNumber - 1)"
-                @keyup.enter="saveExpense(week.weekNumber - 1)"
-                @keyup.escape="cancelEdit"
-              >
-              <span
-                v-else
-                class="font-semibold text-red-600 dark:text-red-400 cursor-pointer hover:underline"
-                @click="startEditExpense(week.weekNumber - 1, week.expenses)"
-              >
-                -{{ formatCurrency(week.expenses) }}
-              </span>
-            </div>
+            <span class="text-gray-500 dark:text-gray-400">Desp</span>
+            <span
+              class="font-medium text-red-600 dark:text-red-400 cursor-pointer hover:underline"
+              title="Clique para editar"
+              @click="startEditExpense(week.weekNumber - 1, week.expenses)"
+            >
+              {{ formatCompact(week.expenses) }}
+            </span>
           </div>
           <div class="flex justify-between pt-1 border-t border-gray-200 dark:border-gray-600">
-            <span class="font-bold text-gray-700 dark:text-gray-300">Saldo</span>
+            <span class="font-bold text-gray-600 dark:text-gray-300">Saldo</span>
             <span
               :class="[
                 'font-bold',
@@ -133,9 +91,46 @@
                   : 'text-red-600 dark:text-red-400'
               ]"
             >
-              {{ formatCurrency(week.balance) }}
+              {{ week.balance >= 0 ? '+' : '' }}{{ formatCompact(week.balance) }}
             </span>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit modal -->
+    <div
+      v-if="editingWeek !== null"
+      class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+      @click.self="cancelEdit"
+    >
+      <div class="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-xl w-72">
+        <h3 class="font-bold text-gray-800 dark:text-white mb-3">
+          Editar Despesa - Semana {{ editingWeek + 1 }}
+        </h3>
+        <div class="relative mb-4">
+          <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">R$</span>
+          <input
+            v-model="editingValue"
+            type="text"
+            class="w-full pl-10 pr-4 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg text-gray-800 dark:text-white font-semibold focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            @keyup.enter="saveExpense(editingWeek)"
+            @keyup.escape="cancelEdit"
+          >
+        </div>
+        <div class="flex gap-2">
+          <button
+            class="flex-1 px-3 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+            @click="cancelEdit"
+          >
+            Cancelar
+          </button>
+          <button
+            class="flex-1 px-3 py-2 bg-blue-500 text-white rounded-lg text-sm font-medium hover:bg-blue-600 transition-colors"
+            @click="saveExpense(editingWeek)"
+          >
+            Salvar
+          </button>
         </div>
       </div>
     </div>
