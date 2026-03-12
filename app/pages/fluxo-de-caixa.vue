@@ -44,6 +44,9 @@
         <!-- Inputs Section -->
         <CashFlowInputs />
 
+        <!-- Chart -->
+        <CashFlowChart />
+
         <!-- Weekly Grid -->
         <CashFlowGrid />
 
@@ -67,6 +70,7 @@
 
 <script setup lang='ts'>
 import CashFlowInputs from '~/components/cashflow/CashFlowInputs.vue'
+import CashFlowChart from '~/components/cashflow/CashFlowChart.vue'
 import CashFlowGrid from '~/components/cashflow/CashFlowGrid.vue'
 import CashFlowSummary from '~/components/cashflow/CashFlowSummary.vue'
 

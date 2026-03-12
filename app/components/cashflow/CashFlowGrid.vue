@@ -92,11 +92,36 @@
               {{ formatCurrency(week.totalEntries) }}
             </span>
           </div>
-          <div class="flex justify-between">
+          <div class="flex justify-between items-center">
             <span class="text-gray-600 dark:text-gray-400">Despesas</span>
-            <span class="font-semibold text-red-600 dark:text-red-400">
-              -{{ formatCurrency(week.expenses) }}
-            </span>
+            <div class="flex items-center gap-1">
+              <button
+                class="text-gray-400 hover:text-blue-500 transition-colors"
+                title="Editar despesa"
+                @click="startEditExpense(week.weekNumber - 1, week.expenses)"
+              >
+                <ion-icon
+                  name="pencil"
+                  class="text-xs"
+                />
+              </button>
+              <input
+                v-if="editingWeek === week.weekNumber - 1"
+                v-model="editingValue"
+                type="text"
+                class="w-20 px-1 py-0.5 text-right text-xs bg-white dark:bg-gray-700 border border-blue-400 rounded focus:outline-none"
+                @blur="saveExpense(week.weekNumber - 1)"
+                @keyup.enter="saveExpense(week.weekNumber - 1)"
+                @keyup.escape="cancelEdit"
+              >
+              <span
+                v-else
+                class="font-semibold text-red-600 dark:text-red-400 cursor-pointer hover:underline"
+                @click="startEditExpense(week.weekNumber - 1, week.expenses)"
+              >
+                -{{ formatCurrency(week.expenses) }}
+              </span>
+            </div>
           </div>
           <div class="flex justify-between pt-1 border-t border-gray-200 dark:border-gray-600">
             <span class="font-bold text-gray-700 dark:text-gray-300">Saldo</span>
@@ -118,9 +143,33 @@
 </template>
 
 <script setup lang='ts'>
+import { ref, nextTick } from 'vue'
 import { useCashFlowStore } from '~/store/cashflow'
 
 const store = useCashFlowStore()
+
+const editingWeek = ref<number | null>(null)
+const editingValue = ref('')
+
+function startEditExpense(weekIndex: number, currentValue: number) {
+  editingWeek.value = weekIndex
+  editingValue.value = currentValue.toString()
+  nextTick(() => {
+    const input = document.querySelector(`input[type="text"]`) as HTMLInputElement
+    input?.focus()
+    input?.select()
+  })
+}
+
+function saveExpense(weekIndex: number) {
+  const value = Number(editingValue.value.replace(/\D/g, '')) || 0
+  store.setCustomWeekExpense(weekIndex, value)
+  editingWeek.value = null
+}
+
+function cancelEdit() {
+  editingWeek.value = null
+}
 
 function formatDate(date: Date): string {
   return date.toLocaleDateString('pt-BR', {

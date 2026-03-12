@@ -14,9 +14,12 @@ export const useCashFlowStore = defineStore('cashflow', () => {
   const activationDate = ref(DEFAULT_CASHFLOW_VALUES.activationDate)
   const weeklyExpenses = ref(DEFAULT_CASHFLOW_VALUES.weeklyExpenses)
 
+  // Despesas customizadas por semana (índice 0-11)
+  const customWeeklyExpenses = ref<Record<number, number>>({})
+
   // Computed - Results
   const result = computed<CashFlowResult>(() => {
-    return calculateCashFlow({
+    const baseResult = calculateCashFlow({
       totalVolume: totalVolume.value,
       debitPercent: debitPercent.value,
       creditPercent: creditPercent.value,
@@ -25,6 +28,32 @@ export const useCashFlowStore = defineStore('cashflow', () => {
       activationDate: activationDate.value,
       weeklyExpenses: weeklyExpenses.value,
     })
+
+    // Aplica despesas customizadas por semana
+    const weeksWithCustomExpenses = baseResult.weeks.map((week, index) => {
+      const customExpense = customWeeklyExpenses.value[index]
+      if (customExpense !== undefined) {
+        const newExpenses = customExpense
+        const newBalance = week.totalEntries - newExpenses
+        return {
+          ...week,
+          expenses: newExpenses,
+          balance: Math.round(newBalance * 100) / 100,
+        }
+      }
+      return week
+    })
+
+    // Recalcula sumário
+    const summary = {
+      totalEntries: weeksWithCustomExpenses.reduce((sum, w) => sum + w.totalEntries, 0),
+      totalExpenses: weeksWithCustomExpenses.reduce((sum, w) => sum + w.expenses, 0),
+      totalBalance: weeksWithCustomExpenses.reduce((sum, w) => sum + w.balance, 0),
+      transitionWeeks: weeksWithCustomExpenses.filter(w => w.isTransitionWeek).length,
+      normalWeeks: weeksWithCustomExpenses.filter(w => !w.isTransitionWeek).length,
+    }
+
+    return { weeks: weeksWithCustomExpenses, summary }
   })
 
   // Computed - Valores calculados
@@ -84,6 +113,16 @@ export const useCashFlowStore = defineStore('cashflow', () => {
     }
   }
 
+  function setCustomWeekExpense(weekIndex: number, value: number) {
+    if (value >= 0) {
+      customWeeklyExpenses.value[weekIndex] = value
+    }
+  }
+
+  function clearCustomWeekExpense(weekIndex: number) {
+    delete customWeeklyExpenses.value[weekIndex]
+  }
+
   function resetToDefaults() {
     totalVolume.value = DEFAULT_CASHFLOW_VALUES.totalVolume
     debitPercent.value = DEFAULT_CASHFLOW_VALUES.debitPercent
@@ -92,6 +131,7 @@ export const useCashFlowStore = defineStore('cashflow', () => {
     delayDays.value = DEFAULT_CASHFLOW_VALUES.delayDays
     activationDate.value = new Date()
     weeklyExpenses.value = DEFAULT_CASHFLOW_VALUES.weeklyExpenses
+    customWeeklyExpenses.value = {}
   }
 
   return {
@@ -103,6 +143,7 @@ export const useCashFlowStore = defineStore('cashflow', () => {
     delayDays,
     activationDate,
     weeklyExpenses,
+    customWeeklyExpenses,
 
     // Computed
     result,
@@ -118,6 +159,8 @@ export const useCashFlowStore = defineStore('cashflow', () => {
     setDelayDays,
     setActivationDate,
     setWeeklyExpenses,
+    setCustomWeekExpense,
+    clearCustomWeekExpense,
     resetToDefaults,
   }
 })
