@@ -7,20 +7,6 @@
         : 'border-2 border-gray-100 dark:border-gray-700'
     ]"
   >
-    <!-- Featured badge -->
-    <div
-      v-if="featured"
-      class="absolute top-4 right-4 z-10"
-    >
-      <div class="bg-white/20 backdrop-blur-sm rounded-full px-3 py-1 flex items-center gap-1">
-        <ion-icon
-          name="star"
-          class="text-yellow-300 text-sm"
-        />
-        <span class="text-white text-xs font-bold uppercase tracking-wide">Recomendado</span>
-      </div>
-    </div>
-
     <!-- Header with gradient background -->
     <div
       :class="[
