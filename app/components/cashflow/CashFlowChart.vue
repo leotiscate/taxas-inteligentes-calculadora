@@ -102,12 +102,12 @@
             <!-- Week label -->
             <div class="text-center pt-2 border-t border-gray-200 dark:border-gray-700">
               <div
-                class="text-[10px] sm:text-xs font-semibold px-1 py-0.5 rounded transition-colors"
+                class="text-[8px] sm:text-[10px] font-semibold px-0.5 py-0.5 rounded transition-colors leading-tight"
                 :class="hasRealImpact(week)
                   ? 'text-amber-700 dark:text-amber-400 bg-amber-100 dark:bg-amber-900/30'
                   : 'text-gray-600 dark:text-gray-400'"
               >
-                S{{ week.weekNumber }}
+                {{ getWeekLabel(week.weekNumber) }}
               </div>
               <!-- Balance indicator -->
               <div
@@ -399,9 +399,27 @@ function getWeekReasons(week: WeekCashFlow): string[] {
 
 function getWeekTooltip(week: WeekCashFlow): string {
   if (hasRealImpact(week)) {
-    return `S${week.weekNumber}: ${formatCurrency(week.totalEntries)} (impacto do delay: -${getWeekReduction(week)}%)`
+    return `${getWeekLabel(week.weekNumber)}: ${formatCurrency(week.totalEntries)} (impacto do delay: -${getWeekReduction(week)}%)`
   }
-  return `S${week.weekNumber}: ${formatCurrency(week.totalEntries)} (normal)`
+  return `${getWeekLabel(week.weekNumber)}: ${formatCurrency(week.totalEntries)} (normal)`
+}
+
+const monthNames = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ']
+
+function getWeekLabel(weekNumber: number): string {
+  // Calcula a data de inicio da semana baseada na data de ativacao
+  const activationDate = new Date(store.activationDate)
+  const weekStartDate = new Date(activationDate)
+  weekStartDate.setDate(activationDate.getDate() + (weekNumber - 1) * 7)
+
+  // Calcula qual semana do mes (1-5)
+  const dayOfMonth = weekStartDate.getDate()
+  const weekOfMonth = Math.ceil(dayOfMonth / 7)
+
+  // Pega o mes
+  const month = monthNames[weekStartDate.getMonth()]
+
+  return `S${weekOfMonth} ${month}`
 }
 
 const maxValue = computed(() => {
