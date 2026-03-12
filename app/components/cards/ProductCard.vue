@@ -1,41 +1,28 @@
 <template>
   <div
-    class="relative bg-white dark:bg-gray-800 rounded-2xl shadow-xl dark:shadow-white/5 overflow-hidden border-2 transition-all duration-300 card-hover"
-    :class="cardClasses"
+    class="relative bg-white dark:bg-gray-800 rounded-2xl shadow-xl dark:shadow-white/5 overflow-hidden border-2 border-gray-100 dark:border-gray-700 transition-all duration-300 card-hover"
   >
-    <!-- Best option glow effect -->
-    <div
-      v-if="isBestOption"
-      class="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-teal-500/5"
-    />
-
     <!-- Header with gradient background -->
     <div
-      class="relative px-6 py-5"
+      class="relative px-5 py-4"
       :class="headerClasses"
     >
-      <!-- Best option badge -->
-      <BestOptionBadge
-        v-if="isBestOption"
-        class="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10"
-      />
-
       <!-- Product icon and name -->
       <div class="flex items-center gap-3">
         <div
-          class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg"
+          class="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg"
           :class="iconBgClass"
         >
           <ion-icon
             :name="productIcon"
-            class="text-2xl text-white"
+            class="text-xl text-white"
           />
         </div>
         <div>
-          <h3 class="text-lg font-bold text-white">
+          <h3 class="text-base font-bold text-white">
             {{ displayName }}
           </h3>
-          <p class="text-sm text-white/70">
+          <p class="text-xs text-white/70">
             {{ productSubtitle }}
           </p>
         </div>
@@ -43,16 +30,13 @@
     </div>
 
     <!-- Main content -->
-    <div class="relative p-6">
+    <div class="relative p-5">
       <!-- Main value display -->
-      <div class="text-center mb-6">
-        <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-2">
+      <div class="text-center mb-4">
+        <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-1">
           {{ valueLabel }}
         </p>
-        <p
-          class="text-4xl font-bold tracking-tight"
-          :class="isBestOption ? 'text-emerald-600 dark:text-emerald-400' : 'text-gray-800 dark:text-gray-100'"
-        >
+        <p class="text-2xl font-bold tracking-tight text-gray-800 dark:text-gray-100">
           {{ formattedNetAmount }}
         </p>
       </div>
@@ -60,15 +44,15 @@
       <!-- Details section for investment products -->
       <div
         v-if="hasInvestmentDetails"
-        class="space-y-3"
+        class="space-y-2 text-sm"
       >
         <!-- Gross interest -->
-        <div class="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-700">
+        <div class="flex items-center justify-between py-1.5 border-b border-gray-100 dark:border-gray-700">
           <div class="flex items-center gap-2">
-            <div class="w-2 h-2 rounded-full bg-green-500" />
-            <span class="text-sm text-gray-600 dark:text-gray-400">Rendimento Bruto</span>
+            <div class="w-1.5 h-1.5 rounded-full bg-green-500" />
+            <span class="text-gray-600 dark:text-gray-400">Bruto</span>
           </div>
-          <span class="text-sm font-semibold text-green-600 dark:text-green-400">
+          <span class="font-semibold text-green-600 dark:text-green-400">
             {{ formattedInterestAmount }}
           </span>
         </div>
@@ -76,37 +60,32 @@
         <!-- IOF (if applicable) -->
         <div
           v-if="hasIof"
-          class="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-700"
+          class="flex items-center justify-between py-1.5 border-b border-gray-100 dark:border-gray-700"
         >
           <div class="flex items-center gap-2">
-            <div class="w-2 h-2 rounded-full bg-orange-500" />
-            <span class="text-sm text-gray-600 dark:text-gray-400">IOF</span>
+            <div class="w-1.5 h-1.5 rounded-full bg-orange-500" />
+            <span class="text-gray-600 dark:text-gray-400">IOF</span>
           </div>
-          <span class="text-sm font-semibold text-orange-600 dark:text-orange-400">
+          <span class="font-semibold text-orange-600 dark:text-orange-400">
             -{{ formattedIofAmount }}
           </span>
         </div>
 
         <!-- IR -->
-        <div class="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-700">
+        <div class="flex items-center justify-between py-1.5 border-b border-gray-100 dark:border-gray-700">
           <div class="flex items-center gap-2">
-            <div class="w-2 h-2 rounded-full bg-red-500" />
-            <span class="text-sm text-gray-600 dark:text-gray-400">
-              IR ({{ taxPercentage }}%)
-            </span>
+            <div class="w-1.5 h-1.5 rounded-full bg-red-500" />
+            <span class="text-gray-600 dark:text-gray-400">IR ({{ taxPercentage }}%)</span>
           </div>
-          <span class="text-sm font-semibold text-red-600 dark:text-red-400">
+          <span class="font-semibold text-red-600 dark:text-red-400">
             -{{ formattedTaxAmount }}
           </span>
         </div>
 
         <!-- Net result -->
-        <div class="flex items-center justify-between pt-2">
-          <span class="text-sm font-bold text-gray-700 dark:text-gray-300">Liquido</span>
-          <span
-            class="text-lg font-bold"
-            :class="isBestOption ? 'text-emerald-600 dark:text-emerald-400' : 'text-gray-800 dark:text-gray-100'"
-          >
+        <div class="flex items-center justify-between pt-1">
+          <span class="font-bold text-gray-700 dark:text-gray-300">Liquido</span>
+          <span class="font-bold text-gray-800 dark:text-gray-100">
             {{ formattedNetAmount }}
           </span>
         </div>
@@ -115,46 +94,26 @@
       <!-- Details for Taxa Inteligente -->
       <div
         v-if="isTaxaInteligente"
-        class="space-y-4"
+        class="space-y-3"
       >
-        <div class="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-700">
+        <div class="flex items-center justify-between py-1.5 border-b border-gray-100 dark:border-gray-700 text-sm">
           <div class="flex items-center gap-2">
-            <div class="w-2 h-2 rounded-full bg-emerald-500" />
-            <span class="text-sm text-gray-600 dark:text-gray-400">Desconto por dia</span>
+            <div class="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+            <span class="text-gray-600 dark:text-gray-400">Por dia</span>
           </div>
-          <span class="text-sm font-semibold text-emerald-600 dark:text-emerald-400">
+          <span class="font-semibold text-emerald-600 dark:text-emerald-400">
             {{ formattedDailyDiscount }}
           </span>
         </div>
 
-        <div class="bg-emerald-50 dark:bg-emerald-900/20 rounded-xl p-4 text-center">
-          <div class="flex items-center justify-center gap-2 text-emerald-700 dark:text-emerald-300">
+        <div class="bg-emerald-50 dark:bg-emerald-900/20 rounded-lg p-3 text-center">
+          <div class="flex items-center justify-center gap-1.5 text-emerald-700 dark:text-emerald-300">
             <ion-icon
               name="checkmark-circle"
-              class="text-xl"
+              class="text-base"
             />
-            <span class="text-sm font-medium">Sem IOF e sem IR</span>
+            <span class="text-xs font-medium">Sem IOF e sem IR</span>
           </div>
-          <p class="text-xs text-emerald-600 dark:text-emerald-400 mt-1">
-            Desconto aplicado diretamente na taxa
-          </p>
-        </div>
-      </div>
-
-      <!-- Difference from best option -->
-      <div
-        v-if="!isBestOption && differenceFromBest > 0"
-        class="mt-4 bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800 rounded-xl p-4"
-      >
-        <div class="flex items-center gap-2 text-red-700 dark:text-red-400">
-          <ion-icon
-            name="trending-down"
-            class="text-lg"
-          />
-          <p class="text-sm">
-            <span class="font-bold">{{ formattedDifference }}</span>
-            a menos que a melhor opcao
-          </p>
         </div>
       </div>
     </div>
@@ -165,11 +124,9 @@
 import { computed } from 'vue'
 import type { ProductColor, ProductResult } from '~/types/comparison'
 import type { TaxaInteligenteResult } from '~/src/taxaInteligente'
-import BestOptionBadge from './BestOptionBadge.vue'
 
 const props = defineProps<{
   product: ProductResult
-  differenceFromBest: number
 }>()
 
 const formatCurrency = (value: number) => {
@@ -181,7 +138,6 @@ const formatCurrency = (value: number) => {
 }
 
 const displayName = computed(() => props.product.displayName)
-const isBestOption = computed(() => props.product.isBestOption)
 const isTaxaInteligente = computed(() => props.product.type === 'taxaInteligente')
 const hasInvestmentDetails = computed(() => !isTaxaInteligente.value)
 
@@ -210,7 +166,6 @@ const productIcon = computed(() => {
 })
 
 const formattedNetAmount = computed(() => formatCurrency(props.product.netAmount))
-const formattedDifference = computed(() => formatCurrency(props.differenceFromBest))
 
 // Investment details
 const details = computed(() => props.product.details)
@@ -257,13 +212,6 @@ const formattedDailyDiscount = computed(() => {
 })
 
 // Styling
-const cardClasses = computed(() => {
-  if (isBestOption.value) {
-    return 'border-emerald-400 dark:border-emerald-500 best-option-glow'
-  }
-  return 'border-gray-100 dark:border-gray-700'
-})
-
 const headerClasses = computed(() => {
   const classes: Record<ProductColor, string> = {
     blue: 'bg-gradient-to-br from-blue-500 to-blue-600',
