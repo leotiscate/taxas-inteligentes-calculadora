@@ -45,10 +45,10 @@
         ]"
       >
         <!-- Week header -->
-        <div class="flex items-center justify-between mb-2">
+        <div class="flex items-center justify-between mb-1">
           <h3
             :class="[
-              'text-xs font-bold',
+              'text-[10px] font-bold',
               week.isTransitionWeek
                 ? 'text-orange-800 dark:text-orange-300'
                 : 'text-green-800 dark:text-green-300'
@@ -58,42 +58,51 @@
           </h3>
           <span
             v-if="week.isTransitionWeek"
-            class="w-2 h-2 rounded-full bg-orange-400"
+            class="w-1.5 h-1.5 rounded-full bg-orange-400"
             title="Transicao"
           />
         </div>
 
-        <!-- Week totals - Compact -->
-        <div class="space-y-0.5 text-xs">
-          <div class="flex justify-between">
-            <span class="text-gray-500 dark:text-gray-400">Ent</span>
-            <span class="font-medium text-green-600 dark:text-green-400">
-              {{ formatCompact(week.totalEntries) }}
-            </span>
+        <!-- Days row - ultra compact -->
+        <div class="grid grid-cols-7 gap-px mb-1">
+          <div
+            v-for="day in week.days"
+            :key="day.date.toISOString()"
+            :class="[
+              'text-center py-0.5 text-[8px] leading-tight',
+              day.isWeekend
+                ? 'bg-gray-100 dark:bg-gray-700 text-gray-400'
+                : day.isReduced
+                  ? 'bg-orange-100 dark:bg-orange-900/40 text-orange-600 dark:text-orange-400'
+                  : 'bg-green-100 dark:bg-green-900/40 text-green-600 dark:text-green-400'
+            ]"
+            :title="`${day.dayOfWeek}: R$ ${day.amount.toLocaleString('pt-BR')}`"
+          >
+            <div class="font-medium">{{ day.dayOfWeekShort.charAt(0) }}</div>
+            <div class="font-semibold">{{ formatMicro(day.amount) }}</div>
           </div>
-          <div class="flex justify-between items-center">
-            <span class="text-gray-500 dark:text-gray-400">Desp</span>
+        </div>
+
+        <!-- Week totals - Ultra Compact -->
+        <div class="flex justify-between items-center text-[9px] pt-1 border-t border-gray-200 dark:border-gray-600">
+          <div class="flex gap-2">
+            <span class="text-green-600">+{{ formatCompact(week.totalEntries) }}</span>
             <span
-              class="font-medium text-red-600 dark:text-red-400 cursor-pointer hover:underline"
-              title="Clique para editar"
+              class="text-red-600 cursor-pointer hover:underline"
+              title="Editar despesa"
               @click="startEditExpense(week.weekNumber - 1, week.expenses)"
             >
-              {{ formatCompact(week.expenses) }}
+              -{{ formatCompact(week.expenses) }}
             </span>
           </div>
-          <div class="flex justify-between pt-1 border-t border-gray-200 dark:border-gray-600">
-            <span class="font-bold text-gray-600 dark:text-gray-300">Saldo</span>
-            <span
-              :class="[
-                'font-bold',
-                week.balance >= 0
-                  ? 'text-green-600 dark:text-green-400'
-                  : 'text-red-600 dark:text-red-400'
-              ]"
-            >
-              {{ week.balance >= 0 ? '+' : '' }}{{ formatCompact(week.balance) }}
-            </span>
-          </div>
+          <span
+            :class="[
+              'font-bold',
+              week.balance >= 0 ? 'text-green-700' : 'text-red-700'
+            ]"
+          >
+            ={{ week.balance >= 0 ? '+' : '' }}{{ formatCompact(week.balance) }}
+          </span>
         </div>
       </div>
     </div>
@@ -183,6 +192,16 @@ function formatCurrency(value: number): string {
 }
 
 function formatCompact(value: number): string {
+  if (Math.abs(value) >= 1000000) {
+    return `${(value / 1000000).toFixed(1)}M`
+  }
+  if (Math.abs(value) >= 1000) {
+    return `${(value / 1000).toFixed(0)}k`
+  }
+  return value.toFixed(0)
+}
+
+function formatMicro(value: number): string {
   if (value >= 1000) {
     return `${(value / 1000).toFixed(0)}k`
   }
