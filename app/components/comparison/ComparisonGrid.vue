@@ -18,14 +18,14 @@
       </div>
     </div>
 
-    <!-- Grid com Taxa Inteligente em destaque (primeira posição, maior) -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-      <!-- Taxa Inteligente - ocupa 2 colunas em telas grandes -->
+    <!-- Grid com todos os cards lado a lado -->
+    <div class="flex flex-col sm:flex-row items-stretch gap-4">
+      <!-- Taxa Inteligente - 20% maior -->
       <ProductCard
         v-if="taxaInteligenteResult"
         :product="taxaInteligenteResult"
         :featured="true"
-        class="animate-fade-in-up sm:col-span-2 xl:row-span-2"
+        class="animate-fade-in-up sm:flex-[1.2]"
       />
 
       <!-- Demais produtos -->
@@ -33,7 +33,7 @@
         v-for="(product, index) in otherResults"
         :key="product.type"
         :product="product"
-        class="animate-fade-in-up opacity-0"
+        class="animate-fade-in-up opacity-0 sm:flex-1"
         :class="`stagger-${index + 1}`"
       />
     </div>
