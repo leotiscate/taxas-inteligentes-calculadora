@@ -1,10 +1,10 @@
 <template>
-  <div class="inline-flex items-center gap-1 px-3 py-1 bg-stone-green text-white text-sm font-bold rounded-full shadow-md">
+  <div class="badge-shine inline-flex items-center gap-1.5 px-4 py-1.5 bg-gradient-to-r from-yellow-400 via-yellow-500 to-amber-500 text-yellow-900 text-sm font-bold rounded-full shadow-lg shadow-yellow-500/30 border border-yellow-300">
     <ion-icon
-      name="star"
-      class="text-yellow-300"
+      name="trophy"
+      class="text-base"
     />
-    <span>Melhor Opcao</span>
+    <span>MELHOR OPCAO</span>
   </div>
 </template>
 

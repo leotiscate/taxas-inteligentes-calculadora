@@ -1,24 +1,32 @@
 <template>
-  <div>
+  <div class="group">
     <label
       for="period-select"
-      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+      class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2"
     >
       Prazo
     </label>
-    <select
-      id="period-select"
-      v-model="period"
-      class="block w-full px-3 py-2 border-b-2 border-gray-300 dark:border-gray-600 dark:bg-gray-800 text-gray-900 dark:text-white focus:border-stone-green dark:focus:border-stone-green focus:outline-none transition-colors cursor-pointer"
-    >
-      <option
-        v-for="option in PERIOD_OPTIONS"
-        :key="option"
-        :value="option"
+    <div class="relative">
+      <select
+        id="period-select"
+        v-model="period"
+        class="block w-full px-4 py-3 bg-gray-50 dark:bg-gray-700/50 border-2 border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white font-medium focus:border-emerald-500 dark:focus:border-emerald-400 focus:bg-white dark:focus:bg-gray-700 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all duration-200 cursor-pointer appearance-none"
       >
-        {{ option }} dias
-      </option>
-    </select>
+        <option
+          v-for="option in PERIOD_OPTIONS"
+          :key="option"
+          :value="option"
+        >
+          {{ option }} dias
+        </option>
+      </select>
+      <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+        <ion-icon
+          name="chevron-down"
+          class="text-gray-400"
+        />
+      </div>
+    </div>
   </div>
 </template>
 

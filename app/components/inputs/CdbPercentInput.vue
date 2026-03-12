@@ -1,8 +1,8 @@
 <template>
-  <div>
+  <div class="group">
     <label
       for="cdb-percent-input"
-      class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+      class="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2"
     >
       Taxa CDB
     </label>
@@ -13,10 +13,11 @@
         type="number"
         min="1"
         step="1"
-        class="block w-full px-3 pr-20 py-2 border-b-2 border-gray-300 dark:border-gray-600 dark:bg-transparent text-gray-900 dark:text-white focus:border-stone-green dark:focus:border-stone-green focus:outline-none transition-colors"
+        class="block w-full px-4 pr-16 py-3 bg-gray-50 dark:bg-gray-700/50 border-2 border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white font-medium focus:border-emerald-500 dark:focus:border-emerald-400 focus:bg-white dark:focus:bg-gray-700 focus:ring-4 focus:ring-emerald-500/10 outline-none transition-all duration-200"
+        placeholder="100"
       >
       <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-        <span class="text-gray-500 dark:text-gray-400 text-sm">% CDI</span>
+        <span class="text-xs text-blue-500 dark:text-blue-400 font-medium">% CDI</span>
       </div>
     </div>
   </div>

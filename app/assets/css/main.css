@@ -6,27 +6,101 @@
 /* Stone Brand Colors */
 @theme {
   --color-stone-green: #00A868;
+  --color-stone-green-dark: #008552;
+  --color-stone-green-light: #00C77B;
   --color-card-cdb: #3B82F6;
   --color-card-compromissada: #8B5CF6;
   --color-card-app-auto: #F59E0B;
   --color-card-taxa-inteligente: #00A868;
 }
 
-/* Custom animations and transitions */
+/* Base styles */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-soft {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 2s ease-in-out infinite;
+}
+
+/* Stagger animations for cards */
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+.stagger-4 { animation-delay: 0.4s; }
+
+/* Page transitions */
 .page-enter-active,
 .page-leave-active {
-  transition: all 0.2s;
+  transition: all 0.3s ease;
 }
 
 .page-enter-from,
 .page-leave-to {
   opacity: 0;
-  transform: translateY(0.4rem);
+  transform: translateY(10px);
 }
 
 /* Stone Green utility classes */
 .bg-stone-green {
   background-color: var(--color-stone-green);
+}
+
+.bg-stone-green-dark {
+  background-color: var(--color-stone-green-dark);
 }
 
 .text-stone-green {
@@ -49,6 +123,56 @@
   --tw-gradient-to: var(--color-stone-green);
 }
 
+/* Gradient backgrounds */
+.bg-gradient-stone {
+  background: linear-gradient(135deg, #00A868 0%, #00C77B 50%, #00A868 100%);
+}
+
+.bg-gradient-stone-dark {
+  background: linear-gradient(135deg, #006644 0%, #00A868 100%);
+}
+
+/* Glass effect */
+.glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.glass-dark {
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Card hover effects */
+.card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.2);
+}
+
+/* Best option glow */
+.best-option-glow {
+  box-shadow:
+    0 0 20px rgba(0, 168, 104, 0.3),
+    0 0 40px rgba(0, 168, 104, 0.1),
+    0 10px 40px -10px rgba(0, 168, 104, 0.4);
+}
+
+/* Input focus styles */
+.input-focus {
+  transition: all 0.2s ease;
+}
+
+.input-focus:focus {
+  border-color: var(--color-stone-green);
+  box-shadow: 0 0 0 3px rgba(0, 168, 104, 0.1);
+}
+
 /* Focus styles using Stone green */
 .focus\:border-stone-green:focus {
   border-color: var(--color-stone-green);
@@ -67,4 +191,67 @@ input[type="number"]::-webkit-outer-spin-button {
 
 input[type="number"] {
   -moz-appearance: textfield;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #00A868;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #008552;
+}
+
+/* Selection color */
+::selection {
+  background: rgba(0, 168, 104, 0.2);
+  color: inherit;
+}
+
+/* Badge shine effect */
+.badge-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.badge-shine::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: shimmer 2s infinite;
+  background-size: 200% 100%;
+}
+
+/* Gradient text */
+.text-gradient-stone {
+  background: linear-gradient(135deg, #00A868, #00C77B);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Pattern background */
+.pattern-dots {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
 }
