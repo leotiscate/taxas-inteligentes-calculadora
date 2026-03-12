@@ -1,22 +1,42 @@
 <template>
-  <div class="mt-8 bg-white dark:bg-gray-800 rounded-2xl shadow-xl dark:shadow-white/5 p-6 sm:p-8 border border-gray-100 dark:border-gray-700">
-    <!-- Section title -->
-    <div class="flex items-center gap-3 mb-6">
-      <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg">
+  <div class="mt-8 bg-white dark:bg-gray-800 rounded-2xl shadow-xl dark:shadow-white/5 border border-gray-100 dark:border-gray-700 overflow-hidden">
+    <!-- Section header (clickable) -->
+    <button
+      class="w-full p-6 sm:p-8 flex items-center justify-between cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+      @click="isOpen = !isOpen"
+    >
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg">
+          <ion-icon
+            name="school"
+            class="text-white text-xl"
+          />
+        </div>
+        <div class="text-left">
+          <h2 class="text-lg font-bold text-gray-800 dark:text-white">
+            Entenda os Calculos
+          </h2>
+          <p class="text-sm text-gray-500 dark:text-gray-400">
+            Guia completo sobre impostos e investimentos
+          </p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="text-xs text-gray-400 dark:text-gray-500 hidden sm:block">
+          {{ isOpen ? 'Clique para ocultar' : 'Clique para expandir' }}
+        </span>
         <ion-icon
-          name="school"
-          class="text-white text-xl"
+          :name="isOpen ? 'chevron-up' : 'chevron-down'"
+          class="text-gray-400 text-xl transition-transform"
         />
       </div>
-      <div>
-        <h2 class="text-lg font-bold text-gray-800 dark:text-white">
-          Entenda os Calculos
-        </h2>
-        <p class="text-sm text-gray-500 dark:text-gray-400">
-          Guia completo sobre impostos e investimentos
-        </p>
-      </div>
-    </div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div
+      v-show="isOpen"
+      class="px-6 sm:px-8 pb-6 sm:pb-8"
+    >
 
     <!-- What is IOF and IR -->
     <div class="mb-8 p-5 bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 rounded-xl">
@@ -307,8 +327,12 @@
         </table>
       </div>
     </div>
+    </div>
   </div>
 </template>
 
 <script setup lang='ts'>
+import { ref } from 'vue'
+
+const isOpen = ref(false)
 </script>
